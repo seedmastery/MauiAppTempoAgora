@@ -1,4 +1,7 @@
-﻿namespace MauiAppTempoAgora
+﻿using MauiAppTempoAgora.Models;
+using MauiAppTempoAgora.Services;
+
+namespace MauiAppTempoAgora
 {
     public partial class MainPage : ContentPage
     {
@@ -9,16 +12,64 @@
             InitializeComponent();
         }
 
-        private void OnCounterClicked(object? sender, EventArgs e)
+        // Event handlers de UI normalmente são async void
+        private async void btnBuscar_Clicked(object sender, EventArgs e)
         {
-            count++;
+            try
+            {
+                var lbl = this.FindByName<Label>("lbl_res");
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+                if (!string.IsNullOrEmpty(txtCidade.Text))
+                {
+                    Tempo? T = await DataService.GetPrevisao(txtCidade.Text);
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
+                    if (T != null)
+                    {
+                        string dados_previsao = "";
+                        dados_previsao += $"Latitude: {T.lat} " +
+                            $"Longitude: {T.lon} " +
+                            $"Nascer do Sol: {T.sunrise} " +
+                            $"Por do Sol: {T.sunset} " +
+                            $"Temp Máx: {T.temp_max} " +
+                            $"Temp Min: {T.temp_min} ";
+
+                        if (lbl != null)
+                        {
+                            lbl.Text = dados_previsao;
+                        }
+                        else
+                        {
+                            await DisplayAlert("Erro", "Controle 'lbl_res' não encontrado no XAML.", "OK");
+                        }
+                    }
+                    else
+                    {
+                        if (lbl != null)
+                        {
+                            lbl.Text = "Sem dados de previsão.";
+                        }
+                        else
+                        {
+                            await DisplayAlert("Erro", "Controle 'lbl_res' não encontrado no XAML.", "OK");
+                        }
+                    }
+                }
+                else
+                {
+                    if (lbl != null)
+                    {
+                        lbl.Text = "Preencha a cidade.";
+                    }
+                    else
+                    {
+                        await DisplayAlert("Erro", "Controle 'lbl_res' não encontrado no XAML.", "OK");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Ops", ex.Message, "OK");
+            }
         }
     }
 }
