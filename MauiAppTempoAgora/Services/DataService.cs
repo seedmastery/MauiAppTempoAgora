@@ -2,6 +2,7 @@
 
 using MauiAppTempoAgora.Models;
 using Newtonsoft.Json.Linq;
+using System.Net;
 
 public class DataService
 {
@@ -39,7 +40,11 @@ public class DataService
                     sunrise = sunrise.ToString("HH:mm"),
                     sunset = sunset.ToString("HH:mm")
                 }; //Fecha obj do tempo.
-            } //Fecha if resp.IsSuccessStatusCode
+            } else if (resp.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+
         }// fecha laço using
 
         return t;

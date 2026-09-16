@@ -31,7 +31,10 @@ namespace MauiAppTempoAgora
                             $"Nascer do Sol: {T.sunrise} " +
                             $"Por do Sol: {T.sunset} " +
                             $"Temp Máx: {T.temp_max} " +
-                            $"Temp Min: {T.temp_min} ";
+                            $"Temp Min: {T.temp_min} " +
+                            $"Clima: {T.description} " +
+                            $"Velocidade do Vento: {T.speed} m/s " +
+                            $"Visibilidade: {T.visibility} m";
 
                         if (lbl != null)
                         {
@@ -46,7 +49,7 @@ namespace MauiAppTempoAgora
                     {
                         if (lbl != null)
                         {
-                            lbl.Text = "Sem dados de previsão.";
+                            lbl.Text = "Cidade não encontrada.";
                         }
                         else
                         {
@@ -66,9 +69,20 @@ namespace MauiAppTempoAgora
                     }
                 }
             }
+            catch (HttpRequestException)
+            {
+                await DisplayAlert(
+                    "Sem conexão",
+                    "Verifique sua conexão com a internet.",
+                    "OK");
+            }
             catch (Exception ex)
             {
-                await DisplayAlert("Ops", ex.Message, "OK");
+                await DisplayAlert(
+                    "Erro",
+                    $"Ocorreu um erro: {ex.Message}",
+                    "OK");
+
             }
         }
     }
