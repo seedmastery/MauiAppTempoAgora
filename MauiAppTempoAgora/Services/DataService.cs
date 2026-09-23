@@ -29,6 +29,7 @@ public class DataService
 
                 t = new Tempo()
                 {
+                    name = (string?)rascunho["name"],
                     lat = (double)rascunho["coord"]["lat"],
                     lon = (double)rascunho["coord"]["lon"],
                     description = (string)rascunho["weather"][0]["description"],

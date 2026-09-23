@@ -2,6 +2,7 @@
 {
     public class Tempo
     {
+        public string? name { get; set; }
         public double? lon { get; set; }
         public double? lat { get; set; }
         public int? visibility { get; set; }
